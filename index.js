@@ -37,7 +37,7 @@ function setDependencies() {
                 // method to read from non-checkbox
             }
             //only works for checkboxes
-            dependencies[key] = document.getElementById(key).value;
+            dependencies[key] = document.getElementById(key).checked;
         }
     }
 }
