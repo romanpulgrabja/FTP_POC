@@ -28,6 +28,20 @@ function selectOS(OS) {
         buildStr[0] = 'FROM educloud:centOS\n';
     }
 }
+
+function setDependencies() {
+    for(key in dependencies) {
+        if (dependencies.hasOwnProperty(key)) {
+            //alternative method if value is not set by checkbox
+            if (key === 'something' || key === 'somethingelse') {
+                // method to read from non-checkbox
+            }
+            //only works for checkboxes
+            dependencies[key] = document.getElementById(key).value;
+        }
+    }
+}
+
 function installDependencies() {
     buildStr.push('RUN sudo apt-get purge -y python.* &&   sudo apt-get update &&   sudo apt-get install -y --no-install-recommends \\');
     for (let key in dependencies) {
@@ -47,7 +61,8 @@ function compileDF() {
 }
 
 function runBuilder() {
+    setDependencies();
     installDependencies();
-    compileDF();
+    console.log(compileDF())
 }
 
