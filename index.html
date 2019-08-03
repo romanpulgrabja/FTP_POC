@@ -28,7 +28,10 @@
 
                     </li>
                     <li>
-                        <input type="range">
+                        <label>
+                            Slider example
+                            <input type="range">
+                        </label>
                     </li>
                     <li>
                         <label>
@@ -37,31 +40,46 @@
                         </label>
                     </li>
                     <li>
-                        <input id="gcc" type="checkbox">
-                        GCC
+                        <label>
+                            <input id="gcc" type="checkbox">
+                            GCC
+                        </label>
                     </li>
                     <li>
-                        <input id="g++" type="checkbox">
-                        G++
+                        <label>
+                            <input id="g++" type="checkbox">
+                            G++
+                        </label>
                     </li>
                     <li>
-                        <input id="autoconfig" type="checkbox">
-                        Autoconfig
+                        <label>
+                            <input id="autoconfig" type="checkbox">
+                            Autoconfig
+                        </label>
                     </li>
                     <li>
-                        <input id="automake" type="checkbox">
-                        Automake
+                        <label>
+                            <input id="automake" type="checkbox">
+                            Automake
+                        </label>
                     </li>
                     <li>
-                        <input id="imagemagick" type="checkbox">
-                        imagemagick
+                        <label>
+                            <input id="imagemagick" type="checkbox">
+                            imagemagick
+                        </label>
                     </li>
                     <li>
-                        <input id="libbz2" type="checkbox">
-                        libbz2
+                        <label>
+                            <input id="libbz2" type="checkbox">
+                            libbz2
+                        </label>
                     </li>
                     <li>
-                        <input id="port" type="text" placeholder="8080">
+                        <label>
+                            <input id="port" type="text" placeholder="8080">
+                            Port
+                        </label>
                     </li>
                 </ul>
             </fieldset>
@@ -69,8 +87,11 @@
         </form>
     </div>
     <div class="textfield">
-        <textarea class="recipe" id="recipe" type="text">
+        <label>
+            Preview
+            <textarea class="recipe" id="recipe">
         </textarea>
+        </label>
         <script src="index.js"></script>
         <script>
             readTxt();
