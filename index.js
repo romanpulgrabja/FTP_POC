@@ -61,7 +61,8 @@ function compileDF() {
 }
 
 function runBuilder() {
-    setDependencies();
+    dependencies['gcc'] = document.getElementById('gcc').value;
+    // setDependencies();
     installDependencies();
     console.log(compileDF())
 }
