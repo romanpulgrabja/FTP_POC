@@ -9,7 +9,7 @@
 <body>
 <div class="editor">
     <div class="selection">
-        <from>
+        <from name="selectionform">
             <fieldset>
                 <ul class="input">
                     <li>
@@ -37,11 +37,15 @@
                         </label>
                     </li>
                     <li>
+                        <input id="gcc" type="checkbox">
+                        GCC
+                    </li>
+                    <li>
                         <input id="port" type="text" placeholder="8080">
                     </li>
                 </ul>
             </fieldset>
-            <button type="button">Build</button>
+            <button type="submit" name="selectionform" onclick="runBuilder()">Build</button>
         </from>
     </div>
     <div class="textfield">
