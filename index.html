@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<script src="index.js"></script>
+<body>
+<div class="editor">
+    <div class="selection">
+        <from>
+            <fieldset>
+                <ul class="input">
+                    <li>
+                        <label>
+                            <input type="checkbox">
+                            Label
+                        </label>
+                    </li>
+                    <li>
+                            <input type="radio" id="sa" name="usertype" value="student">
+                            <label for="sa"> Student</label>
+                            <input type="radio" id="prof" name="usertype" value="prof">
+                            <label for="prof">Dozent oder Tutor</label>
+                            <input type="radio" id="ma" name="usertype" value="ma">
+                            <label for="ma">Mitarbeiter</label>
+
+                    </li>
+                    <li>
+                        <input type="range">
+                    </li>
+                    <li>
+                        <label>
+                            Enter other value:
+                            <input type="text">
+                        </label>
+                    </li>
+                    <li>
+                        <input id="port" type="text" placeholder="8080">
+                    </li>
+                </ul>
+            </fieldset>
+            <button type="button">Build</button>
+        </from>
+    </div>
+    <div class="textfield">
+        <textarea class="recipe" id="recipe" type="text">
+        </textarea>
+        <script src="index.js"></script>
+        <script>
+            readTxt();
+        </script>
+    </div>
+</div>
+</body>
+</html>
