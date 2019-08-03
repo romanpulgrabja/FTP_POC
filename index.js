@@ -1,7 +1,7 @@
 // this will be our dockerfile
 var buildStr = [];
 // list of dependencies to install
-var dependencies = {"autoconf": true, "automake": true, "bzip": true, "file": true, "g++": true, "gcc": true, };
+var dependencies = {"autoconf": true, "automake": true, "bzip": true, "file": true, "g++": true, "gcc": true };
 var ENV_map = {};
 var port = "8080";
 
@@ -43,9 +43,12 @@ function setDependencies() {
 }
 
 function installDependencies() {
+    // clear arry first to prevent duplicate files
+    buildStr = [];
     buildStr.push('RUN sudo apt-get purge -y python.* &&   sudo apt-get update &&   sudo apt-get install -y --no-install-recommends \\');
     for (let key in dependencies) {
         if (dependencies.hasOwnProperty(key) && dependencies[key] === true) {
+            console.log(key);
             buildStr.push(key + ' \\');
         }
     }
@@ -61,7 +64,8 @@ function compileDF() {
 }
 
 function runBuilder() {
-    dependencies['gcc'] = document.getElementById('gcc').value;
+    dependencies['gcc'] = document.getElementById('gcc').checked;
+    console.log(document.getElementById('gcc').checked);
     // setDependencies();
     installDependencies();
     console.log(compileDF())
