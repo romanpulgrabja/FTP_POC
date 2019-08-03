@@ -66,8 +66,13 @@ function compileDF() {
 function runBuilder() {
     dependencies['gcc'] = document.getElementById('gcc').checked;
     console.log(document.getElementById('gcc').checked);
+    if (document.getElementById('port').value) {
+        port = document.getElementById('port').value;
+    } else {
+        port = '8080';
+    }
     // setDependencies();
     installDependencies();
-    console.log(compileDF())
+    alert(compileDF());
 }
 
