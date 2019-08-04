@@ -103,7 +103,7 @@
                     </label>
                 </div>
                 <div class="btn-group form-group form-check">
-                    <button type="submit" data-toggle="tooltip" title="Create your custom Dockerfile!"
+                    <button type="button" data-toggle="tooltip" title="Create your custom Dockerfile!"
                             class="btn btn-primary" name="selectionform" onclick="runBuilder()">Build
                     </button>
                     <button type="reset" data-toggle="tooltip" title="Reset the options!"
@@ -114,16 +114,16 @@
                             class="btn btn-warning" name="advBtn">Advanced
                     </button>
                 </div>
+                <div class="form-group form-check alert" id="successMessage" style="display: none">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>Success!</strong> Created the custom stack.
+                </div>
             </form>
         </div>
         <div class="col">
             <div class="form-group collapse" id="previewForm">
                 <label for="recipe">Editable Preview:</label>
                 <textarea class="form-control form-group" rows="15" id="recipe"></textarea>
-                <script src="index.js"></script>
-                <script>
-                    readTxt();
-                </script>
                 <div class="form-group">
                     <button type="submit" data-toggle="tooltip" title="Create with custom preview"
                             class="btn btn-warning" name="customBuild">Build the Preview

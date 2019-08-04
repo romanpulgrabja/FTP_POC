@@ -14,14 +14,17 @@ function setPort() {
     }
 }
 
-function readTxt() {
-    textArea = document.getElementById('recipe');
+function updatePreview(build) {
+    document.getElementById('recipe').value = build.join("\n");
+    console.log(buildStr);
+    /*
     var client = new XMLHttpRequest();
     client.open('GET', 'recipe.txt');
     client.onreadystatechange = function () {
         textArea.value = client.responseText;
     };
     client.send();
+    */
 }
 
 function selectOS(OS) {
@@ -52,8 +55,7 @@ function installDependencies() {
     buildStr.push('RUN sudo apt-get purge -y python.* && sudo apt-get update && sudo apt-get install -y --no-install-recommends \\');
     for (let key in dependencies) {
         if (dependencies.hasOwnProperty(key) && dependencies[key] === true) {
-            console.log(key + 'hello');
-            buildStr.push(key + '\\');
+            buildStr.push(key + ' \\');
         }
     }
     //*************************************
@@ -81,12 +83,19 @@ function installDependencies() {
     } else if (selectionValue === 'Mathematics') {
         buildStr.push('PIP MATHEMATICS SET');
     }
-    //at last set port to which the file should be exposed to
+    // at last set port to which the file should be exposed to
     buildStr.push('EXPOSE ' + setPort());
+    // show notification that the build was successful
+    displaySuccess();
+    // update the preview for advanced mode
+    updatePreview(buildStr);
 }
 
-function compileDF() {
-    return buildStr.join('\n');
+function displaySuccess() {
+    let x = document.getElementById('successMessage');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    }
 }
 
 function runBuilder() {
@@ -95,6 +104,5 @@ function runBuilder() {
     }
     // setDependencies();
     installDependencies();
-    alert(compileDF());
 }
 
