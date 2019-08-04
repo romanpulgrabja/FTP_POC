@@ -3,7 +3,7 @@ let buildStr = [];
 // list of dependencies to install, important: key name has to be equal to the id of the checkbox input
 const dependencies = {
     "autoconfig": false, "automake": false, "libbz2": false,
-    "label-example": false, "g++": false, "gcc": false, "imagemagick": false
+    "g++": false, "gcc": false, "imagemagick": false
 };
 
 function setPort() {
@@ -50,7 +50,7 @@ function setDependencies() {
 function installDependencies() {
     // clear array first to prevent duplicate files
     buildStr = [];
-    buildStr.push('RUN sudo apt-get purge -y python.* &&   sudo apt-get update &&   sudo apt-get install -y --no-install-recommends \\');
+    buildStr.push('RUN sudo apt-get purge -y python.* && sudo apt-get update && sudo apt-get install -y --no-install-recommends \\');
     for (let key in dependencies) {
         if (dependencies.hasOwnProperty(key) && dependencies[key] === true) {
             console.log(key + 'hello');
@@ -60,6 +60,20 @@ function installDependencies() {
     //*************************************
     // PUSH YOUR STATIC INSTRUCTIONS HERE!!!!
     //*************************************
+
+    /*
+    Installing Python Modules based on selection
+     */
+    const selectionValue = document.getElementById('selectionPackage').value;
+    if (selectionValue === 'Standard') {
+        buildStr.push('PIP STANDARD SET');
+    }
+    else if (selectionValue === 'Data Science') {
+        buildStr.push('PIP DATA SCIENCE SET');
+    }
+    else if (selectionValue === 'Mathematics') {
+        buildStr.push('PIP MATHEMATICS SET');
+    }
     //at last set port to which the file should be exposed to
     buildStr.push('EXPOSE ' + setPort());
 }
