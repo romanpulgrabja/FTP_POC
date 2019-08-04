@@ -102,18 +102,27 @@
                             class="btn btn-primary" name="selectionform" onclick="runBuilder()">Build
                     </button>
                     <button type="reset" data-toggle="tooltip" title="Reset the options!"
-                            class="btn btn-danger" name="resetBtn">Reset</button>
+                            class="btn btn-danger" name="resetBtn">Reset
+                    </button>
+                    <button type="button" data-toggle="collapse" data-target="#previewForm"
+                            title="Open the advanced mode!"
+                            class="btn btn-warning" name="advBtn">Advanced
+                    </button>
                 </div>
             </form>
         </div>
         <div class="col">
-            <div class="form-group">
-                <label for="recipe">Preview:</label>
-                <textarea class="form-control" rows="15" id="recipe"></textarea>
+            <div class="form-group collapse" id="previewForm">
+                <label for="recipe">Editable Preview:</label>
+                <textarea class="form-control form-group" rows="15" id="recipe"></textarea>
                 <script src="index.js"></script>
                 <script>
                     readTxt();
                 </script>
+                <div class="form-group">
+                    <button type="submit" data-toggle="tooltip" title="Create with custom preview"
+                            class="btn btn-warning" name="customBuild">Build the Preview</button>
+                </div>
             </div>
         </div>
     </div>
