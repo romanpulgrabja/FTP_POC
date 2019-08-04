@@ -104,14 +104,16 @@
                 </div>
                 <div class="btn-group form-group form-check">
                     <button type="button" data-toggle="tooltip" title="Create your custom Dockerfile!"
-                            class="btn btn-primary" name="selectionform" onclick="runBuilder()">Build
+                            class="btn btn-primary" name="selectionform" id="buildButton" onclick="runBuilder()">Build
                     </button>
                     <button type="reset" data-toggle="tooltip" title="Reset the options!"
                             class="btn btn-danger" name="resetBtn">Reset
                     </button>
                     <button type="button" data-toggle="collapse" data-target="#previewForm"
                             title="Open the advanced mode!"
-                            class="btn btn-warning" name="advBtn">Advanced
+                            class="btn btn-warning" name="advBtn" id="advancedButton"
+                            onclick="runBuilder(skip=true)">
+                        Advanced
                     </button>
                 </div>
                 <div class="form-group form-check alert" id="successMessage" style="display: none">
@@ -125,9 +127,14 @@
                 <label for="recipe">Editable Preview:</label>
                 <textarea class="form-control form-group" rows="15" id="recipe"></textarea>
                 <div class="form-group">
-                    <button type="submit" data-toggle="tooltip" title="Create with custom preview"
-                            class="btn btn-warning" name="customBuild">Build the Preview
+                    <button type="button" data-toggle="tooltip" title="Create with custom preview"
+                            class="btn btn-warning" name="customBuild"
+                            onclick="advancedBuild()">Build the Preview
                     </button>
+                </div>
+                <div class="form-group form-check alert" id="successPreviewMessage" style="display: none">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>Success!</strong> Created the custom preview stack.
                 </div>
             </div>
         </div>

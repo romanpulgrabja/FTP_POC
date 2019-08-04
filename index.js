@@ -16,15 +16,6 @@ function setPort() {
 
 function updatePreview(build) {
     document.getElementById('recipe').value = build.join("\n");
-    console.log(buildStr);
-    /*
-    var client = new XMLHttpRequest();
-    client.open('GET', 'recipe.txt');
-    client.onreadystatechange = function () {
-        textArea.value = client.responseText;
-    };
-    client.send();
-    */
 }
 
 function selectOS(OS) {
@@ -49,7 +40,7 @@ function setDependencies() {
     }
 }
 
-function installDependencies() {
+function installDependencies(skip) {
     // clear array first to prevent duplicate files
     buildStr = [];
     buildStr.push('RUN sudo apt-get purge -y python.* && sudo apt-get update && sudo apt-get install -y --no-install-recommends \\');
@@ -85,24 +76,38 @@ function installDependencies() {
     }
     // at last set port to which the file should be exposed to
     buildStr.push('EXPOSE ' + setPort());
-    // show notification that the build was successful
-    displaySuccess();
     // update the preview for advanced mode
     updatePreview(buildStr);
+    if (skip === true) {
+        // pass, in this case it was called from opening Advanced Mode
+    }
+    else {
+        // show notification that the build was successful
+        displayBuildSuccess('successMessage');
+    }
 }
 
-function displaySuccess() {
-    let x = document.getElementById('successMessage');
+function displayBuildSuccess(id) {
+    let x = document.getElementById(id);
     if (x.style.display === 'none') {
         x.style.display = 'block';
     }
 }
 
-function runBuilder() {
+function runBuilder(skip = false) {
     for (let key in dependencies) {
         dependencies[key] = document.getElementById(key).checked;
     }
-    // setDependencies();
-    installDependencies();
+    // called from Advanced Button
+    if (skip === true) {
+        // disable/enable the Build button when advanced is shown
+        document.getElementById('buildButton').disabled = document.getElementById('buildButton').disabled === false;
+    }
+    installDependencies(skip);
 }
 
+function advancedBuild() {
+    let dockerfile = document.getElementById('recipe').value;
+    console.log(dockerfile);
+    displayBuildSuccess('successPreviewMessage')
+}
