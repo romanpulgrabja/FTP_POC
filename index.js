@@ -1,12 +1,18 @@
 // this will be our dockerfile
-var buildStr = [];
-// list of dependencies to install
-var dependencies = {"autoconf": true, "automake": true, "bzip": true, "file": true, "g++": true, "gcc": true };
-var ENV_map = {};
-var port = "8080";
+let buildStr = [];
+// list of dependencies to install, important: key name has to be equal to the id of the checkbox input
+const dependencies = {
+    "autoconfig": false, "automake": false, "libbz2": false,
+    "label-example": false, "g++": false, "gcc": false, "imagemagick": false
+};
 
 function setPort() {
-    return document.getElementById('port').value === null ? "8080" : document.getElementById('port').value;
+    if (document.getElementById('port').value === '') {
+        return 8080;
+    }
+    else {
+        return document.getElementById('port').value;
+    }
 }
 
 function readTxt() {
@@ -23,14 +29,13 @@ function selectOS(OS) {
     //add needed OS
     if (OS === 'ubuntu') {
         buildStr[0] = 'FROM educloud:ubuntu';
-    }
-    else if (OS === 'centOS') {
+    } else if (OS === 'centOS') {
         buildStr[0] = 'FROM educloud:centOS\n';
     }
 }
 
 function setDependencies() {
-    for(key in dependencies) {
+    for (key in dependencies) {
         if (dependencies.hasOwnProperty(key)) {
             //alternative method if value is not set by checkbox
             if (key === 'something' || key === 'somethingelse') {
@@ -43,20 +48,20 @@ function setDependencies() {
 }
 
 function installDependencies() {
-    // clear arry first to prevent duplicate files
+    // clear array first to prevent duplicate files
     buildStr = [];
     buildStr.push('RUN sudo apt-get purge -y python.* &&   sudo apt-get update &&   sudo apt-get install -y --no-install-recommends \\');
     for (let key in dependencies) {
         if (dependencies.hasOwnProperty(key) && dependencies[key] === true) {
-            console.log(key);
-            buildStr.push(key + ' \\');
+            console.log(key + 'hello');
+            buildStr.push(key + '\\');
         }
     }
     //*************************************
     // PUSH YOUR STATIC INSTRUCTIONS HERE!!!!
     //*************************************
     //at last set port to which the file should be exposed to
-    buildStr.push('EXPOSE ' + port);
+    buildStr.push('EXPOSE ' + setPort());
 }
 
 function compileDF() {
@@ -64,12 +69,8 @@ function compileDF() {
 }
 
 function runBuilder() {
-    dependencies['gcc'] = document.getElementById('gcc').checked;
-    console.log(document.getElementById('gcc').checked);
-    if (document.getElementById('port').value) {
-        port = document.getElementById('port').value;
-    } else {
-        port = '8080';
+    for (let key in dependencies) {
+        dependencies[key] = document.getElementById(key).checked;
     }
     // setDependencies();
     installDependencies();
