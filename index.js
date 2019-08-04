@@ -9,8 +9,7 @@ const dependencies = {
 function setPort() {
     if (document.getElementById('port').value === '') {
         return 8080;
-    }
-    else {
+    } else {
         return document.getElementById('port').value;
     }
 }
@@ -65,13 +64,21 @@ function installDependencies() {
     Installing Python Modules based on selection
      */
     const selectionValue = document.getElementById('selectionPackage').value;
+    buildStr.push('RUN pip3 install \\');  // default begin for any Python module install
     if (selectionValue === 'Standard') {
         buildStr.push('PIP STANDARD SET');
-    }
-    else if (selectionValue === 'Data Science') {
+    } else if (selectionValue === 'Machine Learning') {
+        // based on Top 10 List: https://www.edureka.co/blog/python-libraries/
+        /* this includes: Tensorflow, Scikit-Learn, Numpy, Keras, PyTorch, LightGBM, Eli5,
+        Scipy, Theano and Pandas
+        */
+        buildStr.push('tensorflow scikit-learn numpy Keras ' +
+            'https://download.pytorch.org/whl/cpu/torch-1.0.1-cp37-cp37m-win_amd64.whl ' +
+            'torchvision lightgbm eli5 scipy Theano pandas')
+
+    } else if (selectionValue === 'Data Science') {
         buildStr.push('PIP DATA SCIENCE SET');
-    }
-    else if (selectionValue === 'Mathematics') {
+    } else if (selectionValue === 'Mathematics') {
         buildStr.push('PIP MATHEMATICS SET');
     }
     //at last set port to which the file should be exposed to
