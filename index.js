@@ -23,10 +23,10 @@ function readTxt() {
         textArea.value = client.responseText;
     };
     // client.send();
-=======
+}
+
 function updatePreview(build) {
     document.getElementById('recipe').value = build.join("\n");
->>>>>>> 3ecce338869c4f14caea7e9e0fbf2e01c9489fa2
 }
 
 function selectOS(OS) {
