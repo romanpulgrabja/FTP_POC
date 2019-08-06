@@ -1,2 +1,2 @@
 # ignore the .idea folder (local settings from PyCharm)
-.idea/
+*.idea/

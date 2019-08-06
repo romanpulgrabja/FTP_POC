@@ -1,14 +1,20 @@
 // this will be our dockerfile
-var buildStr = [];
-// list of dependencies to install
-var dependencies = {"autoconf": true, "automake": true, "bzip": true, "file": true, "g++": true, "gcc": true };
-var ENV_map = {};
-var port = "8080";
+let buildStr = [];
+// list of dependencies to install, important: key name has to be equal to the id of the checkbox input
+const dependencies = {
+    "autoconfig": false, "automake": false, "libbz2": false,
+    "g++": false, "gcc": false, "imagemagick": false
+};
 
 function setPort() {
-    return document.getElementById('port').value === null ? "8080" : document.getElementById('port').value;
+    if (document.getElementById('port').value === '') {
+        return 8080;
+    } else {
+        return document.getElementById('port').value;
+    }
 }
 
+<<<<<<< HEAD
 function readTxt() {
     textArea = document.getElementById('recipe');
     var client = new XMLHttpRequest();
@@ -17,20 +23,23 @@ function readTxt() {
         textArea.value = client.responseText;
     };
     // client.send();
+=======
+function updatePreview(build) {
+    document.getElementById('recipe').value = build.join("\n");
+>>>>>>> 3ecce338869c4f14caea7e9e0fbf2e01c9489fa2
 }
 
 function selectOS(OS) {
     //add needed OS
     if (OS === 'ubuntu') {
         buildStr[0] = 'FROM educloud:ubuntu';
-    }
-    else if (OS === 'centOS') {
+    } else if (OS === 'centOS') {
         buildStr[0] = 'FROM educloud:centOS\n';
     }
 }
 
 function setDependencies() {
-    for(key in dependencies) {
+    for (key in dependencies) {
         if (dependencies.hasOwnProperty(key)) {
             //alternative method if value is not set by checkbox
             if (key === 'something' || key === 'somethingelse') {
@@ -42,37 +51,74 @@ function setDependencies() {
     }
 }
 
-function installDependencies() {
-    // clear arry first to prevent duplicate files
+function installDependencies(skip) {
+    // clear array first to prevent duplicate files
     buildStr = [];
-    buildStr.push('RUN sudo apt-get purge -y python.* &&   sudo apt-get update &&   sudo apt-get install -y --no-install-recommends \\');
+    buildStr.push('RUN sudo apt-get purge -y python.* && sudo apt-get update && sudo apt-get install -y --no-install-recommends \\');
     for (let key in dependencies) {
         if (dependencies.hasOwnProperty(key) && dependencies[key] === true) {
-            console.log(key);
             buildStr.push(key + ' \\');
         }
     }
     //*************************************
     // PUSH YOUR STATIC INSTRUCTIONS HERE!!!!
     //*************************************
-    //at last set port to which the file should be exposed to
-    buildStr.push('EXPOSE ' + port);
-}
 
-function compileDF() {
-    return buildStr.join('\n');
-}
+    /*
+    Installing Python Modules based on selection
+     */
+    const selectionValue = document.getElementById('selectionPackage').value;
+    buildStr.push('RUN pip3 install \\');  // default begin for any Python module install
+    if (selectionValue === 'Standard') {
+        buildStr.push('PIP STANDARD SET');
+    } else if (selectionValue === 'Machine Learning') {
+        // based on Top 10 List: https://www.edureka.co/blog/python-libraries/
+        /* this includes: Tensorflow, Scikit-Learn, Numpy, Keras, PyTorch, LightGBM, Eli5,
+        Scipy, Theano and Pandas
+        */
+        buildStr.push('tensorflow scikit-learn numpy Keras ' +
+            'https://download.pytorch.org/whl/cpu/torch-1.0.1-cp37-cp37m-win_amd64.whl ' +
+            'torchvision lightgbm eli5 scipy Theano pandas')
 
-function runBuilder() {
-    dependencies['gcc'] = document.getElementById('gcc').checked;
-    console.log(document.getElementById('gcc').checked);
-    if (document.getElementById('port').value) {
-        port = document.getElementById('port').value;
-    } else {
-        port = '8080';
+    } else if (selectionValue === 'Data Science') {
+        buildStr.push('PIP DATA SCIENCE SET');
+    } else if (selectionValue === 'Mathematics') {
+        buildStr.push('PIP MATHEMATICS SET');
     }
-    // setDependencies();
-    installDependencies();
-    alert(compileDF());
+    // at last set port to which the file should be exposed to
+    buildStr.push('EXPOSE ' + setPort());
+    // update the preview for advanced mode
+    updatePreview(buildStr);
+    if (skip === true) {
+        // pass, in this case it was called from opening Advanced Mode
+    }
+    else {
+        // show notification that the build was successful
+        displayBuildSuccess('successMessage');
+    }
 }
 
+function displayBuildSuccess(id) {
+    let x = document.getElementById(id);
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    }
+}
+
+function runBuilder(skip = false) {
+    for (let key in dependencies) {
+        dependencies[key] = document.getElementById(key).checked;
+    }
+    // called from Advanced Button
+    if (skip === true) {
+        // disable/enable the Build button when advanced is shown
+        document.getElementById('buildButton').disabled = document.getElementById('buildButton').disabled === false;
+    }
+    installDependencies(skip);
+}
+
+function advancedBuild() {
+    let dockerfile = document.getElementById('recipe').value;
+    console.log(dockerfile);
+    displayBuildSuccess('successPreviewMessage')
+}

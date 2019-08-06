@@ -4,98 +4,140 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="index.js"></script>
 </head>
-<script src="index.js"></script>
 <body>
-<div class="editor">
-    <div class="selection">
-        <form name="selectionform">
-            <fieldset>
-                <ul class="input">
-                    <li>
-                        <label>
-                            <input type="checkbox">
-                            Label
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form name="selectionForm">
+                <h3>Create your own custom stack</h3>
+                <div class="form-group form-check">
+                    <label for="selectionPackage" class="form-check-label">
+                        Select your Python module set:
+                    </label>
+                    <select class="form-control" id="selectionPackage" name="selection">
+                        <option>Standard</option>
+                        <option>Machine Learning</option>
+                        <option>Data Science</option>
+                        <option>Mathematics</option>
+                    </select>
+                </div>
+                <div class="form-group form-check">
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="student">
+                            <input type="radio" class="form-check-input" id="student" name="usertype" value="student">
+                            Student
                         </label>
-                    </li>
-                    <li>
-                            <input type="radio" id="sa" name="usertype" value="student">
-                            <label for="sa"> Student</label>
-                            <input type="radio" id="prof" name="usertype" value="prof">
-                            <label for="prof">Dozent oder Tutor</label>
-                            <input type="radio" id="ma" name="usertype" value="ma">
-                            <label for="ma">Mitarbeiter</label>
-
-                    </li>
-                    <li>
-                        <label>
-                            Slider example
-                            <input type="range">
+                    </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="professor">
+                            <input class="form-check-input" type="radio" id="professor" name="usertype" value="prof">
+                            Dozent/Tutor
                         </label>
-                    </li>
-                    <li>
-                        <label>
-                            Enter other value:
-                            <input type="text">
+                    </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="mitarbeiter">
+                            <input type="radio" id="mitarbeiter" class="form-check-input" name="usertype" value="ma">
+                            Mitarbeiter
                         </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="gcc" type="checkbox">
-                            GCC
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="g++" type="checkbox">
-                            G++
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="autoconfig" type="checkbox">
-                            Autoconfig
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="automake" type="checkbox">
-                            Automake
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="imagemagick" type="checkbox">
-                            imagemagick
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="libbz2" type="checkbox">
-                            libbz2
-                        </label>
-                    </li>
-                    <li>
-                        <label>
-                            <input id="port" type="text" placeholder="8080">
-                            Port
-                        </label>
-                    </li>
-                </ul>
-            </fieldset>
-            <button type="submit" name="selectionform" onclick="runBuilder()">Build</button>
-        </form>
-    </div>
-    <div class="textfield">
-        <label>
-            Preview
-            <textarea class="recipe" id="recipe">
-        </textarea>
-        </label>
-        <script src="index.js"></script>
-        <script>
-            readTxt();
-        </script>
+                    </div>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        Slider example
+                        <input class="form-control-range" type="range">
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        Enter other value:
+                        <input class="form-control" type="text">
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-label" id="gcc" type="checkbox">
+                        GCC
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-label" id="g++" type="checkbox">
+                        G++
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-label" id="autoconfig" type="checkbox">
+                        Autoconfig
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-label" id="automake" type="checkbox">
+                        Automake
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-label" id="imagemagick" type="checkbox">
+                        imagemagick
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-label" id="libbz2" type="checkbox">
+                        libbz2
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        Port:
+                        <input class="form-control" id="port" type="number" placeholder="8080" value="">
+                    </label>
+                </div>
+                <div class="btn-group form-group form-check">
+                    <button type="button" data-toggle="tooltip" title="Create your custom Dockerfile!"
+                            class="btn btn-primary" name="selectionform" id="buildButton" onclick="runBuilder()">Build
+                    </button>
+                    <button type="reset" data-toggle="tooltip" title="Reset the options!"
+                            class="btn btn-danger" name="resetBtn">Reset
+                    </button>
+                    <button type="button" data-toggle="collapse" data-target="#previewForm"
+                            title="Open the advanced mode!"
+                            class="btn btn-warning" name="advBtn" id="advancedButton"
+                            onclick="runBuilder(skip=true)">
+                        Advanced
+                    </button>
+                </div>
+                <div class="form-group form-check alert" id="successMessage" style="display: none">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>Success!</strong> Created the custom stack.
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <div class="form-group collapse" id="previewForm">
+                <label for="recipe">Editable Preview:</label>
+                <textarea class="form-control form-group" rows="15" id="recipe"></textarea>
+                <div class="form-group">
+                    <button type="button" data-toggle="tooltip" title="Create with custom preview"
+                            class="btn btn-warning" name="customBuild"
+                            onclick="advancedBuild()">Build the Preview
+                    </button>
+                </div>
+                <div class="form-group form-check alert" id="successPreviewMessage" style="display: none">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    <strong>Success!</strong> Created the custom preview stack.
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
