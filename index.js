@@ -1,6 +1,8 @@
 // this will be our dockerfile
 let buildStr = [];
 // list of dependencies to install, important: key name has to be equal to the id of the checkbox input
+let apiURL = "www.myAPI.com/myendpoint";
+
 const dependencies = {
     "autoconfig": false, "automake": false, "libbz2": false,
     "g++": false, "gcc": false, "imagemagick": false
@@ -14,7 +16,6 @@ function setPort() {
     }
 }
 
-<<<<<<< HEAD
 function readTxt() {
     textArea = document.getElementById('recipe');
     var client = new XMLHttpRequest();
@@ -121,4 +122,24 @@ function advancedBuild() {
     let dockerfile = document.getElementById('recipe').value;
     console.log(dockerfile);
     displayBuildSuccess('successPreviewMessage')
+}
+
+// borrowed this from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+// posting buildstring to che API
+function postData(url = '', data = {}) {
+    // Default options are marked with *
+    return fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, cors, *same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+    })
+        .then(response => response.json()); // parses JSON response into native JavaScript objects
 }
