@@ -16,7 +16,7 @@ function readTxt() {
     client.onreadystatechange = function () {
         textArea.value = client.responseText;
     };
-    client.send();
+    // client.send();
 }
 
 function selectOS(OS) {
