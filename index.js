@@ -82,12 +82,14 @@ function installDependencies(skip) {
             'torchvision lightgbm eli5 scipy Theano pandas')
 
     } else if (selectionValue === 'Data Science') {
-      // based on Top 20 List: https://bigdata-madesimple.com/top-20-python-libraries-for-data-science/
+        // based on Top 20 List: https://bigdata-madesimple.com/top-20-python-libraries-for-data-science/
         buildStr.push('numpy thano keras pytorch scipy pandas pybrain' +
               'scikit-learn matplotlib tensorflow seaborn bokeh plotly nltk' +
               'gensim scrapy3 statsmodels kivy pyqt opencv');
     } else if (selectionValue === 'Mathematics') {
-        buildStr.push('PIP MATHEMATICS SET');
+        // based on Top 11 List: https://www.quora.com/What-are-the-best-Python-mathematics-libraries
+        buildStr.push('numpy pandas scipy matplotlib patsy sympy plotly' +
+              'statsmodels adipy matalg27 mlpstyler');
     }
     // at last set port to which the file should be exposed to
     buildStr.push('EXPOSE ' + setPort());
