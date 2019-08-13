@@ -71,7 +71,10 @@ function installDependencies(skip) {
     const selectionValue = document.getElementById('selectionPackage').value;
     buildStr.push('RUN pip3 install \\');  // default begin for any Python module install
     if (selectionValue === 'Standard') {
-        buildStr.push('PIP STANDARD SET');
+        // based on Top 20 List: https://pythontips.com/2013/07/30/20-python-libraries-you-cant-live-without/
+        buildStr.push('requests scrapy wxpython pillow sqlalchemy beautifulsoup'+
+            'twisted numpy scipy matplotlib pygame pyglet pyqt pygtk scapy pywin32' +
+            'nltk nose sympy ipython');
     } else if (selectionValue === 'Machine Learning') {
         /* based on Top 10 List: https://www.edureka.co/blog/python-libraries/
         /* this includes: Tensorflow, Scikit-Learn, Numpy, Keras, PyTorch, LightGBM, Eli5,
@@ -144,7 +147,8 @@ function postData(url = '', data = {}) {
         },
         redirect: 'follow', // manual, *follow, error
         referrer: 'no-referrer', // no-referrer, *client
-        body: JSON.stringify(data), // body data type must match "Content-Type" header
+        body: ''
+        //body: JSON.stringify(data), // body data type must match "Content-Type" header
     })
         .then(response => response.json()); // parses JSON response into native JavaScript objects
 }
