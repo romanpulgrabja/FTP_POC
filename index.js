@@ -16,16 +16,6 @@ function setPort() {
     }
 }
 
-function readTxt() {
-    textArea = document.getElementById('recipe');
-    var client = new XMLHttpRequest();
-    client.open('GET', 'recipe.txt');
-    client.onreadystatechange = function () {
-        textArea.value = client.responseText;
-    };
-    // client.send();
-}
-
 function updatePreview(build) {
     document.getElementById('recipe').value = build.join("\n");
 }
