@@ -13,7 +13,7 @@ window.onload = function () {
         chkBoxContainer.innerHTML +=
             `<div class='form-group form-check'>
                 <label class='form-check-label'>
-                    <input class='form-check-label' id=chkBox'` + key + `' type='checkbox'>
+                    <input class='form-check-label' id=chkBox` + key + ` type='checkbox' onchange="updateDependencies()">
                     ` + key + `
                 </label>
             </div>\n`;
@@ -27,12 +27,18 @@ function addDependency() {
     chkBoxContainer.innerHTML +=
             `<div class='form-group form-check'>
                 <label class='form-check-label'>
-                    <input class='form-check-label' id=chkBox'` + value + `' type='checkbox'>
+                    <input class='form-check-label' id=chkBox` + value + ` type='checkbox' onchange="updateDependencies()">
                     ` + value + `
                 </label>
             </div>\n`;
     dependencies.set(value, true);
     document.getElementById('chkBoxInput').value = "";
+}
+
+function updateDependencies() {
+    dependencies.forEach(function (value, key, map){
+        dependencies.set(key, document.getElementById('chkBox'+key).checked);
+    })
 }
 
 function setPort() {
