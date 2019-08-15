@@ -52,12 +52,12 @@ function updatePreview(build) {
     document.getElementById('recipe').value = build.join("\n");
 }
 
-function selectOS(OS) {
-    //add needed OS
-    if (OS === 'ubuntu') {
-        buildStr[0] = 'FROM educloud:ubuntu';
-    } else if (OS === 'centOS') {
-        buildStr[0] = 'FROM educloud:centOS\n';
+function getOS() {
+    const dropdownValue = document.getElementById('selectionSystem').value;
+    if (dropdownValue === 'Ubuntu') {
+        return ['FROM educloud:ubuntu\n'];
+    } else if (dropdownValue === 'CentOS') {
+        return ['FROM educloud:centOS\n'];
     }
 }
 
