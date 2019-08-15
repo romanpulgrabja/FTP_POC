@@ -62,8 +62,8 @@ function installDependencies(skip) {
     buildStr.push('RUN pip3 install \\');  // default begin for any Python module install
     if (selectionValue === 'Standard') {
         // based on Top 20 List: https://pythontips.com/2013/07/30/20-python-libraries-you-cant-live-without/
-        buildStr.push('requests scrapy wxpython pillow sqlalchemy beautifulsoup'+
-            'twisted numpy scipy matplotlib pygame pyglet pyqt pygtk scapy pywin32' +
+        buildStr.push('requests scrapy wxpython pillow sqlalchemy beautifulsoup '+
+            'twisted numpy scipy matplotlib pygame pyglet pyqt pygtk scapy pywin32 ' +
             'nltk nose sympy ipython');
     } else if (selectionValue === 'Machine Learning') {
         /* based on Top 10 List: https://www.edureka.co/blog/python-libraries/
@@ -76,12 +76,12 @@ function installDependencies(skip) {
 
     } else if (selectionValue === 'Data Science') {
         // based on Top 20 List: https://bigdata-madesimple.com/top-20-python-libraries-for-data-science/
-        buildStr.push('numpy thano keras pytorch scipy pandas pybrain' +
-              'scikit-learn matplotlib tensorflow seaborn bokeh plotly nltk' +
+        buildStr.push('numpy thano keras pytorch scipy pandas pybrain ' +
+              'scikit-learn matplotlib tensorflow seaborn bokeh plotly nltk ' +
               'gensim scrapy3 statsmodels kivy pyqt opencv');
     } else if (selectionValue === 'Mathematics') {
         // based on Top 11 List: https://www.quora.com/What-are-the-best-Python-mathematics-libraries
-        buildStr.push('numpy pandas scipy matplotlib patsy sympy plotly' +
+        buildStr.push('numpy pandas scipy matplotlib patsy sympy plotly ' +
               'statsmodels adipy matalg27 mlpstyler');
     }
     // at last set port to which the file should be exposed to
