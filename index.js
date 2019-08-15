@@ -3,10 +3,37 @@ let buildStr = [];
 // list of dependencies to install, important: key name has to be equal to the id of the checkbox input
 let apiURL = "www.myAPI.com/myendpoint";
 
-const dependencies = {
-    "autoconfig": false, "automake": false, "libbz2": false,
-    "g++": false, "gcc": false, "imagemagick": false
+const dependencies = new Map([["autoconfig", false],["automake", false],
+    ["libbz2", false], ["g++", false], ["gcc", false], ["imagemagick", false]]);
+
+window.onload = function () {
+    console.log("test");
+    const chkBoxContainer = document.getElementById('checkboxes');
+    dependencies.forEach(function (value, key, map) {
+        chkBoxContainer.innerHTML +=
+            `<div class='form-group form-check'>
+                <label class='form-check-label'>
+                    <input class='form-check-label' id=chkBox'` + key + `' type='checkbox'>
+                    ` + key + `
+                </label>
+            </div>\n`;
+    })
 };
+
+function addDependency() {
+    const value = document.getElementById('chkBoxInput').value;
+    if(value === "" || dependencies.has(value)) return;
+    const chkBoxContainer = document.getElementById('checkboxes');
+    chkBoxContainer.innerHTML +=
+            `<div class='form-group form-check'>
+                <label class='form-check-label'>
+                    <input class='form-check-label' id=chkBox'` + value + `' type='checkbox'>
+                    ` + value + `
+                </label>
+            </div>\n`;
+    dependencies.set(value, true);
+    document.getElementById('chkBoxInput').value = "";
+}
 
 function setPort() {
     if (document.getElementById('port').value === '') {
