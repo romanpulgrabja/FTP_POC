@@ -7,7 +7,6 @@ const dependencies = new Map([["autoconfig", false],["automake", false],
     ["libbz2", false], ["g++", false], ["gcc", false], ["imagemagick", false]]);
 
 window.onload = function () {
-    console.log("test");
     const chkBoxContainer = document.getElementById('checkboxes');
     dependencies.forEach(function (value, key, map) {
         chkBoxContainer.innerHTML +=
