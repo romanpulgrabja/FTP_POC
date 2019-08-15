@@ -6,6 +6,11 @@ let apiURL = "www.myAPI.com/myendpoint";
 const dependencies = new Map([["autoconfig", false],["automake", false],
     ["libbz2", false], ["g++", false], ["gcc", false], ["imagemagick", false]]);
 
+
+//************************************
+// Initial Setup
+//************************************
+
 window.onload = function () {
     const chkBoxContainer = document.getElementById('checkboxes');
     dependencies.forEach(function (value, key, map) {
@@ -18,6 +23,12 @@ window.onload = function () {
             </div>\n`;
     })
 };
+
+function updateDependencies() {
+    dependencies.forEach(function (value, key, map){
+        dependencies.set(key, document.getElementById('chkBox'+key).checked);
+    })
+}
 
 function addDependency() {
     const value = document.getElementById('chkBoxInput').value;
@@ -34,17 +45,11 @@ function addDependency() {
     document.getElementById('chkBoxInput').value = "";
 }
 
-function updateDependencies() {
-    dependencies.forEach(function (value, key, map){
-        dependencies.set(key, document.getElementById('chkBox'+key).checked);
-    })
-}
-
-function setPort() {
+function getPort() {
     if (document.getElementById('port').value === '') {
-        return 8080;
+        return ['EXPORT 8080'];
     } else {
-        return document.getElementById('port').value;
+        return ['EXPORT ' + document.getElementById('port').value];
     }
 }
 
@@ -117,7 +122,7 @@ function installDependencies(skip) {
               'statsmodels adipy matalg27 mlpstyler');
     }
     // at last set port to which the file should be exposed to
-    buildStr.push('EXPOSE ' + setPort());
+    buildStr.push(getPort());
     // update the preview for advanced mode
     updatePreview(buildStr);
     if (skip === true) {
