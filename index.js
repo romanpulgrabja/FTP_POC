@@ -83,7 +83,12 @@ function getDependencies() {
 }
 
 function getSudoAccess() {
-    //TODO: Implement
+    if (document.getElementById("chkBoxSudo").checked){
+        return 'RUN sudo useradd -u 1001 -G users -d /home/userPython --shell /bin/bash -m userPython && \\\n'+
+        'sudo usermod -p "*" userPython && \\\n' +
+        'sudo userdel -r user\n' +
+        'USER userPython\n'
+    } else return "";
 }
 
 function buildStaticInstructions() {
@@ -92,7 +97,7 @@ function buildStaticInstructions() {
     buildStr.push(getStaticInstructions());
     buildStr.push(getPipPackages());
     buildStr.push(getDependencies());
-    //buildStr.push(getSudoAccess());
+    buildStr.push(getSudoAccess());
     buildStr.push(getPort());
     staticRecipe = buildStr;
     let recipe = compareRecipes();
@@ -102,7 +107,7 @@ function buildStaticInstructions() {
 function updateRecipeField(recipe) {
     let recipeStr = "";
     for (let i=0; i<recipe.length; i++) recipeStr += recipe[i];
-    document.getElementById('recipe').value = recipeStr;
+    document.getElementById('recipe').value = recipeStr.replace(/\n$/, "").trim();
 }
 
 function compareRecipes() {
@@ -120,26 +125,24 @@ function compareRecipes() {
     let itStc = 0;
     while(itStc < staticRecipe.length && itAdv < advancedRecipe.length){
         if (staticRecipe[itStc] === ""){
-            console.log("in1", itStc, itAdv);
             itStc++;
         } else if (advancedRecipe[itAdv].includes(staticRecipe[itStc]) ||
             staticRecipe[itStc].includes(advancedRecipe[itAdv])) {
-            console.log("in2", itStc, itAdv);
             returnRecipe.push(advancedRecipe[itAdv]);
             itStc++;
             itAdv++;
         } else {
-            console.log("in3", itStc, itAdv);
             returnRecipe.push(advancedRecipe[itAdv]);
             itAdv++;
         }
     }
     returnRecipe[returnRecipe.length-1] += " \n";
-    console.log(returnRecipe);
-    for(; itStc<staticRecipe.length; itStc++) returnRecipe.push(staticRecipe[itStc]);
-    console.log(returnRecipe);
-    for(; itAdv<advancedRecipe.length; itAdv++) returnRecipe.push(advancedRecipe[itAdv]);
-    console.log(returnRecipe);
+    for(; itStc<staticRecipe.length; itStc++) {
+        console.log("in");
+        returnRecipe.push(staticRecipe[itStc])};
+    for(; itAdv<advancedRecipe.length; itAdv++) {
+        console.log("in2");
+        returnRecipe.push(advancedRecipe[itAdv])};
     return returnRecipe;
 }
 
@@ -157,14 +160,6 @@ function cutAdvancedRecipe() {
     }
     advancedRecipe.push(recipe);
     return advancedRecipe;
-}
-
-
-function displayBuildSuccess(id) {
-    let x = document.getElementById(id);
-    if (x.style.display === 'none') {
-        x.style.display = 'block';
-    }
 }
 
 

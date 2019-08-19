@@ -21,7 +21,7 @@
             <form name="selectionForm">
                 <div class="form-group form-check">
                     <label for="selectionPackage" class="form-check-label">
-                        Select Base System: <span class="oi oi-icon-name" title="icon name" aria-hidden="true"></span>
+                        Select Base System:
                     </label>
                     <select class="form-control" id="selectionSystem" name="Select System">
                         <option>Ubuntu</option>
@@ -40,24 +40,15 @@
                     </select>
                 </div>
                 <div class="form-group form-check">
-                    <div class="form-check-inline">
-                        <label class="form-check-label" for="student">
-                            <input type="radio" class="form-check-input" id="student" name="usertype" value="student">
-                            Student
-                        </label>
-                    </div>
-                    <div class="form-check-inline">
-                        <label class="form-check-label" for="professor">
-                            <input class="form-check-input" type="radio" id="professor" name="usertype" value="prof">
-                            Dozent/Tutor
-                        </label>
-                    </div>
-                    <div class="form-check-inline">
-                        <label class="form-check-label" for="mitarbeiter">
-                            <input type="radio" id="mitarbeiter" class="form-check-input" name="usertype" value="ma">
-                            Mitarbeiter
-                        </label>
-                    </div>
+                    <label for="selectionPackage" class="form-check-label">
+                        Select Sudo Access:
+                        <div class='form-group form-check'>
+                            <label class='form-check-label'>
+                                <input class='form-check-label' id='chkBoxSudo' type='checkbox'>
+                                User has Sudo Access
+                            </label>
+                        </div>
+                    </label>
                 </div>
                 <div class="form-group form-check">
                     Select Debian/Ubuntu packages:
