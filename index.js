@@ -168,46 +168,6 @@ function displayBuildSuccess(id) {
 }
 
 
-
-
-
-
-
-
-
-//
-// function advancedBuild() {
-//     let dockerfile = document.getElementById('recipe').value;
-//     displayBuildSuccess('successPreviewMessage')
-// }
-//
-// function installDependencies(skip) {
-//     // clear array first to prevent duplicate files
-//
-//     // update the preview for advanced mode
-//     updatePreview(buildStr);
-//     if (skip === true) {
-//         // pass, in this case it was called from opening Advanced Mode
-//     }
-//     else {
-//         // show notification that the build was successful
-//         displayBuildSuccess('successMessage');
-//     }
-// }
-//
-// function runBuilder(skip = false) {
-//     for (let key in dependencies) {
-//         dependencies[key] = document.getElementById(key).checked;
-//     }
-//     // called from Advanced Button
-//     if (skip === true) {
-//         // disable/enable the Build button when advanced is shown
-//         document.getElementById('buildButton').disabled = document.getElementById('buildButton').disabled === false;
-//     }
-//     installDependencies(skip);
-// }
-
-
 //************************************
 // Event Listener functions
 //************************************
