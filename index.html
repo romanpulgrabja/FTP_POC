@@ -23,7 +23,7 @@
                     <label for="selectionPackage" class="form-check-label">
                         Select Base System:
                     </label>
-                    <select class="form-control" id="selectionSystem" name="Select System">
+                    <select class="form-control" id="selectionSystem" name="Select System" onchange="buildStaticInstructions()">
                         <option>Ubuntu</option>
                         <option>CentOS</option>
                     </select>
@@ -32,7 +32,7 @@
                     <label for="selectionPackage" class="form-check-label">
                         Select your Python module set:
                     </label>
-                    <select class="form-control" id="selectionPackage" name="selection">
+                    <select class="form-control" id="selectionPackage" name="selection" onchange="buildStaticInstructions()">
                         <option>Standard</option>
                         <option>Machine Learning</option>
                         <option>Data Science</option>
@@ -44,7 +44,7 @@
                         Select Sudo Access:
                         <div class='form-group form-check'>
                             <label class='form-check-label'>
-                                <input class='form-check-label' id='chkBoxSudo' type='checkbox'>
+                                <input class='form-check-label' id='chkBoxSudo' type='checkbox' onchange="buildStaticInstructions()">
                                 User has Sudo Access
                             </label>
                         </div>
@@ -68,19 +68,20 @@
                 <div class="form-group form-check">
                     <label class="form-check-label">
                         Port:
-                        <input class="form-control" id="port" type="number" placeholder="8080" value="">
+                        <input class="form-control" id="port" type="text" placeholder="8080" value="8080" onchange="buildStaticInstructions()">
                     </label>
                 </div>
                 <div class="btn-group form-group form-check">
-                    <button type="button" data-toggle="tooltip" title="Create your custom Dockerfile!"
-                            class="btn btn-primary" name="selectionform" id="buildButton" onclick="buildStaticInstructions()">Build
+                    <button type="button" data-toggle="tooltip" title="Download your Dockerfile"
+                            class="btn btn-primary" name="selectionform" id="downloadButton" onclick="startDownload()">
+                            <img class="icon" src="data-transfer-download.svg" alt="icon name"> Download
                     </button>
                     <!-- <button type="reset" data-toggle="tooltip" title="Reset the options!"
                             class="btn btn-danger" name="resetBtn">Reset
                     </button> -->
                     <button type="button" data-toggle="collapse" data-target="#previewForm"
                             title="Open the advanced mode!"
-                            class="btn btn-warning" name="advBtn" id="advancedButton">
+                            class="btn btn-warning" name="advBtn" onclick="toggleAdvancedFlag(); buildStaticInstructions()" id="advancedButton">
                         Advanced
                     </button>
                 </div>

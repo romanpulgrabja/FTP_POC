@@ -1,6 +1,7 @@
 let staticRecipe = [];
 const apiURL = "www.myAPI.com/myendpoint";
 const dockerKeywords = /(FROM|MAINTAINER|RUN|CMD|LABEL|EXPOSE|ENV|ADD|COPY|ENTRYPOINT|VOLUME|USER|WORKDIR|ARG|ONBUILD|STOPSIGNAL|HEALTHCHECK|SHELL)/g
+let inAdvanced = false;
 
 // List of dependencies to install, important: key name has to be equal to the
 // requested debian/ubuntu package.
@@ -19,6 +20,19 @@ function getOS() {
     } else if (dropdownValue === 'CentOS') {
         return 'FROM educloud:centOS\n';
     }
+}
+
+function startDownload() {
+    const recipe = document.getElementById('recipe').value;
+    console.log(recipe);
+    console.log(staticRecipe);
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:/plain;charset=utf-8,' + encodeURIComponent(recipe));
+    element.setAttribute('download', 'DOCKERFILE');
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 }
 
 function resetRecipe() {
@@ -91,6 +105,10 @@ function getSudoAccess() {
     } else return "";
 }
 
+function toggleAdvancedFlag () {
+    inAdvanced = !inAdvanced;
+}
+
 function buildStaticInstructions() {
     buildStr = [];
     buildStr.push(getOS());
@@ -100,7 +118,13 @@ function buildStaticInstructions() {
     buildStr.push(getSudoAccess());
     buildStr.push(getPort());
     staticRecipe = buildStr;
-    let recipe = compareRecipes();
+    let recipe = [];
+    if (inAdvanced) {
+        console.log("in");
+        recipe = compareRecipes();}
+    else {
+        console.log("in2");
+        recipe = staticRecipe};
     updateRecipeField(recipe);
 }
 
@@ -108,6 +132,7 @@ function updateRecipeField(recipe) {
     let recipeStr = "";
     for (let i=0; i<recipe.length; i++) recipeStr += recipe[i];
     document.getElementById('recipe').value = recipeStr.replace(/\n$/, "").trim();
+    console.log("INININ");
 }
 
 function compareRecipes() {
@@ -173,11 +198,12 @@ window.onload = function () {
         chkBoxContainer.innerHTML +=
             `<div class='form-group form-check'>
                 <label class='form-check-label'>
-                    <input class='form-check-label' id=chkBox` + key + ` type='checkbox' onchange="updateDependencies()">
+                    <input class='form-check-label' id=chkBox` + key + ` type='checkbox' onchange="buildStaticInstructions()">
                     ` + key + `
                 </label>
             </div>\n`;
     })
+    buildStaticInstructions();
 };
 
 function addDependency() {
@@ -187,7 +213,7 @@ function addDependency() {
     chkBoxContainer.innerHTML +=
         `<div class='form-group form-check'>
             <label class='form-check-label'>
-                <input class='form-check-label' id=chkBox` + value + ` type='checkbox' onchange="updateDependencies()">
+                <input class='form-check-label' id=chkBox` + value + ` type='checkbox' onchange="buildStaticInstructions()">
                 ` + value + `
             </label>
         </div>\n`;
