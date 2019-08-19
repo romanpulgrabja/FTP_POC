@@ -60,6 +60,15 @@ function getPipPackages() {
     }
 }
 
+function getDependencies() {
+    let packageStr = '';
+    dependencies.forEach(function (value, key, map) {
+        if (value) packageStr += key + " ";
+    })
+    if(packageStr === "") return "";
+    return 'RUN sudo apt-get install ' + packageStr + '\n';
+}
+
 function getSudoAccess() {
     //TODO: Implement
 }
@@ -69,6 +78,7 @@ function buildStaticInstructions() {
     buildStr.push(getOS());
     buildStr.push(getStaticInstructions());
     buildStr.push(getPipPackages());
+    buildStr.push(getDependencies());
     //buildStr.push(getSudoAccess());
     buildStr.push(getPort());
     staticRecipe = buildStr;
@@ -94,22 +104,30 @@ function compareRecipes() {
     // recipes are different, both reciupes will be attended. It is up to the
     // user to then select the one he wants to keep.
     let itAdv = 0;
-    for (let it=0; it< staticRecipe.length; it++) {
-        let flag = true;
-        while (flag){
-            if (advancedRecipe[itAdv].includes(staticRecipe[it]) ||
-                staticRecipe[it].includes(advancedRecipe[itAdv])) {
-                returnRecipe.push(advancedRecipe[itAdv]);
-                flag = false;
-            } else {
-                returnRecipe.push(staticRecipe);
-                returnRecipe.push(advancedRecipe);
-                if(itAdv > advancedRecipe.length) itAdv++;
-                else return advancedRecipe;
-            }
+    let itStc = 0;
+    while(itStc < staticRecipe.length && itAdv < advancedRecipe.length){
+        if (staticRecipe[itStc] === ""){
+            console.log("in1", itStc, itAdv);
+            itStc++;
+        } else if (advancedRecipe[itAdv].includes(staticRecipe[itStc]) ||
+            staticRecipe[itStc].includes(advancedRecipe[itAdv])) {
+            console.log("in2", itStc, itAdv);
+            returnRecipe.push(advancedRecipe[itAdv]);
+            itStc++;
+            itAdv++;
+        } else {
+            console.log("in3", itStc, itAdv);
+            returnRecipe.push(advancedRecipe[itAdv]);
+            itAdv++;
         }
     }
-    return advancedRecipe;
+    returnRecipe[returnRecipe.length-1] += " \n";
+    console.log(returnRecipe);
+    for(; itStc<staticRecipe.length; itStc++) returnRecipe.push(staticRecipe[itStc]);
+    console.log(returnRecipe);
+    for(; itAdv<advancedRecipe.length; itAdv++) returnRecipe.push(advancedRecipe[itAdv]);
+    console.log(returnRecipe);
+    return returnRecipe;
 }
 
 function cutAdvancedRecipe() {
