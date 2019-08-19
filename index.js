@@ -21,8 +21,8 @@ let inAdvanced = false;
  * needed package!
  * @type {Map}
  */
-const dependencies = new Map([["autoconfig", false],["automake", false],
-    ["libbz2", false], ["g++", false], ["gcc", false], ["imagemagick", false]]);
+const dependencies = new Map([['autoconfig', false],['automake', false],
+    ['libbz2', false], ['g++', false], ['gcc', false], ['imagemagick', false]]);
 
 
 
@@ -40,34 +40,6 @@ function getOS() {
         return 'FROM educloud:ubuntu\n';
     } else if (dropdownValue === 'CentOS') {
         return 'FROM educloud:centOS\n';
-    }
-};
-
-/**
- * Function resets the recipe field to the static recipe.
- */
-function resetRecipe() {
-    buildStr = [];
-    buildStr.push(getOS());
-    buildStr.push(getStaticInstructions());
-    buildStr.push(getPipPackages());
-    buildStr.push(getDependencies());
-    //buildStr.push(getSudoAccess());
-    buildStr.push(getPort());
-    staticRecipe = buildStr;
-    updateRecipeField(staticRecipe);
-    $('#resetModal').modal('hide');
-};
-
-/**
- * function finds the selected Port from the input fields
- * @return {String} Docker keyword with the inputed port number
- */
-function getPort() {
-    if (document.getElementById('port').value === '') {
-        return 'EXPOSE 8080';
-    } else {
-        return 'EXPOSE ' + document.getElementById('port').value;
     }
 };
 
@@ -117,9 +89,9 @@ function getPipPackages() {
 function getDependencies() {
     let packageStr = '';
     dependencies.forEach(function (value, key, map) {
-        if (value) packageStr += key + " ";
+        if (value) packageStr += key + ' ';
     })
-    if(packageStr === "") return "";
+    if(packageStr === '') return '';
     return 'RUN sudo apt-get install ' + packageStr + '\n';
 };
 
@@ -129,20 +101,24 @@ function getDependencies() {
  * user without sudo access and then deletes the basic user.
  */
 function getSudoAccess() {
-    if (document.getElementById("chkBoxSudo").checked){
+    if (document.getElementById('chkBoxSudo').checked){
         return 'RUN sudo useradd -u 1001 -G users -d /home/userPython --shell /bin/bash -m userPython && \\\n'+
         'sudo usermod -p "*" userPython && \\\n' +
         'sudo userdel -r user\n' +
         'USER userPython\n'
-    } else return "";
+    } else return '';
 };
 
 /**
- * function that toggles the AdvancedFlag that shows if the advanced recipe
- * field is visible
+ * function finds the selected Port from the input fields
+ * @return {String} Docker keyword with the inputed port number
  */
-function toggleAdvancedFlag () {
-    inAdvanced = !inAdvanced;
+function getPort() {
+    if (document.getElementById('port').value === '') {
+        return 'EXPOSE 8080';
+    } else {
+        return 'EXPOSE ' + document.getElementById('port').value;
+    }
 };
 
 /**
@@ -171,9 +147,9 @@ function buildStaticInstructions() {
  * @param  {Array[String]} recipe Array of the docker strings
  */
 function updateRecipeField(recipe) {
-    let recipeStr = "";
+    let recipeStr = '';
     for (let i=0; i<recipe.length; i++) recipeStr += recipe[i];
-    document.getElementById('recipe').value = recipeStr.replace(/\n$/, "").trim();
+    document.getElementById('recipe').value = recipeStr.replace(/\n$/, '').trim();
 };
 
 /**
@@ -185,7 +161,7 @@ function updateRecipeField(recipe) {
  * @return {String} Merged Array that contains both instruction elements.
  */
 function compareRecipes() {
-    if (document.getElementById('recipe').value === "") {
+    if (document.getElementById('recipe').value === '') {
         return staticRecipe;
     }
     advancedRecipe = cutAdvancedRecipe();
@@ -198,7 +174,7 @@ function compareRecipes() {
     let itAdv = 0;
     let itStc = 0;
     while(itStc < staticRecipe.length && itAdv < advancedRecipe.length){
-        if (staticRecipe[itStc] === ""){
+        if (staticRecipe[itStc] === ''){
             itStc++;
         } else if (advancedRecipe[itAdv].includes(staticRecipe[itStc]) ||
             staticRecipe[itStc].includes(advancedRecipe[itAdv])) {
@@ -210,7 +186,7 @@ function compareRecipes() {
             itAdv++;
         }
     }
-    returnRecipe[returnRecipe.length-1] += " \n";
+    returnRecipe[returnRecipe.length-1] += ' \n';
     for(; itStc<staticRecipe.length; itStc++) {
         returnRecipe.push(staticRecipe[itStc])};
     for(; itAdv<advancedRecipe.length; itAdv++) {
@@ -237,6 +213,30 @@ function cutAdvancedRecipe() {
     }
     advancedRecipe.push(recipe);
     return advancedRecipe;
+};
+
+/**
+ * Function resets the recipe field to the static recipe.
+ */
+function resetRecipe() {
+    buildStr = [];
+    buildStr.push(getOS());
+    buildStr.push(getStaticInstructions());
+    buildStr.push(getPipPackages());
+    buildStr.push(getDependencies());
+    //buildStr.push(getSudoAccess());
+    buildStr.push(getPort());
+    staticRecipe = buildStr;
+    updateRecipeField(staticRecipe);
+    $('#resetModal').modal('hide');
+};
+
+/**
+ * function that toggles the AdvancedFlag that shows if the advanced recipe
+ * field is visible
+ */
+function toggleAdvancedFlag () {
+    inAdvanced = !inAdvanced;
 };
 
 
@@ -271,7 +271,7 @@ window.onload = function () {
  */
 function addDependency() {
     const value = document.getElementById('chkBoxInput').value;
-    if(value === "" || dependencies.has(value)) return;
+    if(value === '' || dependencies.has(value)) return;
     const chkBoxContainer = document.getElementById('checkboxes');
     chkBoxContainer.innerHTML +=
         `<div class='form-group form-check'>
@@ -281,7 +281,7 @@ function addDependency() {
             </label>
         </div>\n`;
     dependencies.set(value, true);
-    document.getElementById('chkBoxInput').value = "";
+    document.getElementById('chkBoxInput').value = '';
     buildStaticInstructions();
 };
 
