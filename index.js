@@ -21,6 +21,19 @@ function getOS() {
     }
 }
 
+function resetRecipe() {
+    buildStr = [];
+    buildStr.push(getOS());
+    buildStr.push(getStaticInstructions());
+    buildStr.push(getPipPackages());
+    buildStr.push(getDependencies());
+    //buildStr.push(getSudoAccess());
+    buildStr.push(getPort());
+    staticRecipe = buildStr;
+    updateRecipeField(staticRecipe);
+    $('#resetModal').modal('hide');
+}
+
 function getPort() {
     if (document.getElementById('port').value === '') {
         return 'EXPOSE 8080';

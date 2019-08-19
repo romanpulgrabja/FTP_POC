@@ -60,6 +60,7 @@
                     </div>
                 </div>
                 <div class="form-group form-check">
+                    Select Debian/Ubuntu packages:
                     <label class="form-check-label">
                         Enter other value:
                         <div class="form-check-inline">
@@ -83,9 +84,9 @@
                     <button type="button" data-toggle="tooltip" title="Create your custom Dockerfile!"
                             class="btn btn-primary" name="selectionform" id="buildButton" onclick="buildStaticInstructions()">Build
                     </button>
-                    <button type="reset" data-toggle="tooltip" title="Reset the options!"
+                    <!-- <button type="reset" data-toggle="tooltip" title="Reset the options!"
                             class="btn btn-danger" name="resetBtn">Reset
-                    </button>
+                    </button> -->
                     <button type="button" data-toggle="collapse" data-target="#previewForm"
                             title="Open the advanced mode!"
                             class="btn btn-warning" name="advBtn" id="advancedButton">
@@ -104,15 +105,32 @@
                 <p><small>Merge Conflicts have to be manually resolved by the user!</small></p>
                 <textarea class="form-control form-group" rows="15" id="recipe"></textarea>
                 <div class="form-group">
-                    <button type="button" data-toggle="tooltip" title="Create with custom preview"
-                            class="btn btn-warning" name="customBuild"
-                            onclick="advancedBuild()">Build the Preview
+                    <button type="button" data-toggle="modal" title="Reset to original"
+                            class="btn btn-danger" name="resetBtn"
+                            data-target="#resetModal">Reset
                     </button>
                 </div>
                 <div class="form-group form-check alert" id="successPreviewMessage" style="display: none">
                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                     <strong>Success!</strong> Created the custom preview stack.
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="resetModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetModalLabel">Reset Confirmation</h5>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to reset the file?
+                    Your changes will be lost!
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-danger" onclick="resetRecipe()">Reset</button>
+                  </div>
             </div>
         </div>
     </div>
