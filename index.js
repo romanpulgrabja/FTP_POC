@@ -24,8 +24,6 @@ function getOS() {
 
 function startDownload() {
     const recipe = document.getElementById('recipe').value;
-    console.log(recipe);
-    console.log(staticRecipe);
     let element = document.createElement('a');
     element.setAttribute('href', 'data:/plain;charset=utf-8,' + encodeURIComponent(recipe));
     element.setAttribute('download', 'DOCKERFILE');
@@ -120,10 +118,8 @@ function buildStaticInstructions() {
     staticRecipe = buildStr;
     let recipe = [];
     if (inAdvanced) {
-        console.log("in");
         recipe = compareRecipes();}
     else {
-        console.log("in2");
         recipe = staticRecipe};
     updateRecipeField(recipe);
 }
@@ -132,7 +128,6 @@ function updateRecipeField(recipe) {
     let recipeStr = "";
     for (let i=0; i<recipe.length; i++) recipeStr += recipe[i];
     document.getElementById('recipe').value = recipeStr.replace(/\n$/, "").trim();
-    console.log("INININ");
 }
 
 function compareRecipes() {
@@ -163,10 +158,8 @@ function compareRecipes() {
     }
     returnRecipe[returnRecipe.length-1] += " \n";
     for(; itStc<staticRecipe.length; itStc++) {
-        console.log("in");
         returnRecipe.push(staticRecipe[itStc])};
     for(; itAdv<advancedRecipe.length; itAdv++) {
-        console.log("in2");
         returnRecipe.push(advancedRecipe[itAdv])};
     return returnRecipe;
 }
@@ -213,12 +206,13 @@ function addDependency() {
     chkBoxContainer.innerHTML +=
         `<div class='form-group form-check'>
             <label class='form-check-label'>
-                <input class='form-check-label' id=chkBox` + value + ` type='checkbox' onchange="buildStaticInstructions()">
+                <input class='form-check-label' checked="true" id=chkBox` + value + ` type='checkbox' onchange="buildStaticInstructions()">
                 ` + value + `
             </label>
         </div>\n`;
     dependencies.set(value, true);
     document.getElementById('chkBoxInput').value = "";
+    buildStaticInstructions();
 };
 
 function updateDependencies() {
