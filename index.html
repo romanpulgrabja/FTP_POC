@@ -42,7 +42,7 @@
                 </div>
                 <hr/>
                 <div class="form-group form-check">
-                    <label for="selectionPackage" class="form-check-label">
+                    <div class="form-check-label">
                         Select Sudo Access:
                         <div class="form-group form-check">
                             <label class="form-check-label">
@@ -50,21 +50,21 @@
                                 User has Sudo Access
                             </label>
                         </div>
-                    </label>
+                    </div>
                 </div>
                 <hr/>
                 <div class="form-group form-check">
                     Select Debian/Ubuntu packages:
-                    <label class="form-check-label">
-                        Enter other value:
+                    <div class="form-check-label">
+                        Enter new packages:
                         <div class="form-check-inline">
                             <input id ="chkBoxInput" class="form-control" type="text">
                             <button type="button" data-toggle="tooltip" title="Add"
                                 class="btn btn-primary" name="selectionform" id="addButton" onclick="addDependency()">
-                                <img src="images/plus.svg">
+                                <img alt src="images/plus.svg">
                             </button>
                         </div>
-                    </label>
+                    </div>
                 </div>
                 <hr/>
                 <div id="checkboxes">
@@ -89,10 +89,6 @@
                             class="btn btn-warning" name="advBtn" onclick="toggleAdvancedFlag(); buildStaticInstructions()" id="advancedButton">
                         Advanced
                     </button>
-                </div>
-                <div class="form-group form-check alert" id="successMessage" style="display: none">
-                    <span class="closebtn" onclick="this.parentElement.style.display="none";">&times;</span>
-                    <strong>Success!</strong> Created the custom stack.
                 </div>
             </form>
         </div>
