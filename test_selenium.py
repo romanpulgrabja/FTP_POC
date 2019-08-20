@@ -50,21 +50,18 @@ def test_dockerfile_os_selection(browser):
     # selecting CentOS
     system_select = Select(explicit_wait_visibility(browser, locators.SYSTEM_DROPDOWN))
     system_select.select_by_visible_text('CentOS')
-    # download the dockerfile
+    # try with CentOS
     download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
     download_button.click()
-    sleep(0.5)  # time to actually download the file
-    with open(DOCKERFILE_PATH, 'r') as f:
-        content = f.read()
-        assert 'FROM educloud:centOS' in content, 'The selected OS was not found in the Dockerfile!'
+    content = read_dockerfile_content()
+    assert 'FROM educloud:centOS' in content, 'The selected OS was not found in the Dockerfile!'
     clean_download()
+    # try with Ubuntu
     system_select.select_by_visible_text('Ubuntu')
     download_button.click()
-    sleep(0.5)  # time to actually download the file
-    with open(DOCKERFILE_PATH, 'r') as f:
-        content = f.read()
-        assert 'FROM educloud:ubuntu' in content, 'The selected OS was not found in the Dockerfile!'
-        assert 'FROM educloud:centOS' not in content, 'An OS which was not selected was found in the Dockerfile!'
+    content = read_dockerfile_content()
+    assert 'FROM educloud:ubuntu' in content, 'The selected OS was not found in the Dockerfile!'
+    assert 'FROM educloud:centOS' not in content, 'An OS which was not selected was found in the Dockerfile!'
     clean_download()
 
 
