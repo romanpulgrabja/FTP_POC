@@ -89,7 +89,7 @@ function getPipPackages() {
 function getDependencies() {
     let packageStr = '';
     dependencies.forEach(function (value, key, map) {
-        if (value) packageStr += key + ' ';
+        if (value) packageStr = packageStr + key + ' ';
     })
     if(packageStr === '') return '';
     return 'RUN sudo apt-get install ' + packageStr + '\n';
@@ -186,7 +186,7 @@ function compareRecipes() {
             itAdv++;
         }
     }
-    returnRecipe[returnRecipe.length-1] += ' \n';
+    returnRecipe[returnRecipe.length-1] += ' \n\n';
     for(; itStc<staticRecipe.length; itStc++) {
         returnRecipe.push(staticRecipe[itStc])};
     for(; itAdv<advancedRecipe.length; itAdv++) {
@@ -256,7 +256,7 @@ window.onload = function () {
         chkBoxContainer.innerHTML +=
             `<div class='form-group form-check'>
                 <label class='form-check-label'>
-                    <input class='form-check-label' id=chkBox` + key + ` type='checkbox' onchange="buildStaticInstructions()">
+                    <input class='form-check-label' id=chkBox` + key + ` type='checkbox' onClick="updateDependencies()">
                     ` + key + `
                 </label>
             </div>\n`;
@@ -276,7 +276,7 @@ function addDependency() {
     chkBoxContainer.innerHTML +=
         `<div class='form-group form-check'>
             <label class='form-check-label'>
-                <input class='form-check-label' checked="true" id=chkBox` + value + ` type='checkbox' onchange="buildStaticInstructions()">
+                <input class='form-check-label' checked="true" id=chkBox` + value + ` type='checkbox' onClick="updateDependencies()">
                 ` + value + `
             </label>
         </div>\n`;
@@ -300,4 +300,19 @@ function startDownload() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+};
+
+/**
+ * Event Listener for the onchange event of the debian/ubuntu package checkboxes.
+ * Checks each box if its checked and sets the dependency map accordingly.
+ */
+function updateDependencies() {
+    dependencies.forEach(function (value, key, map) {
+        try {
+            map.set(key, document.getElementById('chkBox'+key).checked);
+        } catch (e) {
+            console.error(e);
+        }
+    });
+    buildStaticInstructions();
 };
