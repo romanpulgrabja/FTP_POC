@@ -1,129 +1,28 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import WebDriverException, StaleElementReferenceException
-from selenium.webdriver.support import expected_conditions as ec
-import pytest
 from time import sleep
-
-# Locators collection
-PACKAGE_DROPDOWN = (By.ID, 'selectionPackage')
-STUDENT_RADIO = (By.ID, 'student')
-PROFESSOR_RADIO = (By.ID, 'professor')
-WORKER_RADIO = (By.ID, 'mitarbeiter')
-PORT_INPUT = (By.ID, 'port')
-BUILD_BUTTON = (By.ID, 'buildButton')
-RESET_BUTTON = (By.XPATH, '//button[@type="reset"]')
-ADVANCED_BUTTON = (By.ID, 'advancedButton')
-CUSTOM_BUILD_BUTTON = (By.XPATH, '//button[@name="customBuild"]')
-PREVIEW_INPUT = (By.ID, 'recipe')
-GPP = (By.ID, 'g++')
-IMAGEMAGICK = (By.ID, 'imagemagick')
-
-
-# Common functions
-
-@pytest.fixture(scope='module', autouse=True)
-def browser():
-    """
-    | Pytest Fixture to initiate the browser instance
-
-    :return: browser
-    :rtype: webdriver
-    """
-    chrome_options = webdriver.ChromeOptions()
-    preferences = {
-        'window-size': '1920,1080'
-    }
-    browser = webdriver.Chrome(options=chrome_options)
-    browser.maximize_window()
-    browser.implicitly_wait(10)
-    browser.get("https://romanpulgrabja.github.io/FTP_POC/")  # go to URL of the index.html website
-    yield browser
-
-
-def explicit_wait_visibility(browser, element, return_bool=False):
-    """
-    | A common method to explicitly check for an element with the condition of visibility
-
-    :param bool return_bool: Set this to True if you want to return boolean values instead of the element,
-        True for visible, False for not visible
-    :param webdriver browser: The browser instance from the webdriver
-    :param by element: The XPATH/ID of the element to look for
-    :raises WebDriverException: If the desired element is not visible
-    :return: element
-    :rtype: webdriver element
-    """
-    if return_bool:
-        waiting_time = 1
-    else:
-        waiting_time = 3
-    try:
-        x = WebDriverWait(browser, waiting_time).until(ec.visibility_of_element_located(element))
-        if return_bool:
-            return True
-    except WebDriverException:
-        if return_bool:
-            return False
-        raise WebDriverException('The desired element was not visible!')
-    return x
-
-
-# PyTest test functions
-
-def test_buttons(browser):
-    """
-    | Tests if the buttons are visible as expected
-
-    :param webdriver browser: The browser instance from the webdriver
-    :raises AssertionError: If one of the buttons does not behave as expected
-    :return: None
-    """
-    build_button = explicit_wait_visibility(browser, BUILD_BUTTON)
-    explicit_wait_visibility(browser, RESET_BUTTON)
-    advanced_button = explicit_wait_visibility(browser, ADVANCED_BUTTON)
-    # check the advanced build button is not visible
-    assert explicit_wait_visibility(browser, CUSTOM_BUILD_BUTTON, return_bool=True) is False, (
-        'Custom Build Button was visible unlike expected!'
-    )
-    # now click Advanced button and check it is visible
-    advanced_button.click()
-    assert explicit_wait_visibility(browser, CUSTOM_BUILD_BUTTON, return_bool=True), (
-        'Custom Build Button was not visible unlike expected!'
-    )
-    # check that the normal build button is disabled when the custom build button is visible
-    assert build_button.get_attribute('disabled') == 'true', (
-        'Normal Build Button was enabled unlike expected!'
-    )
-    # now check that the build button is enabled again and the custom build button not visible
-    # once you click on advanced again
-    advanced_button.click()
-    sleep(0.5)  # wait for the button disappear animation
-    assert explicit_wait_visibility(browser, CUSTOM_BUILD_BUTTON, return_bool=True) is False, (
-        'Custom Build Button was visible unlike expected!'
-    )
-    assert build_button.get_attribute('dislabed') is None, (
-        'Normal Build Button was disabled unlike expected!'
-    )
+import locators
+from commons import explicit_wait_visibility, clean_download, browser, DOCKERFILE_PATH, read_dockerfile_content
+from selenium.webdriver.support.ui import Select
 
 
 def test_preview(browser):
     """
-    | Tests the content of the preview if you change the selections
+    | Tests the content of the preview (Advanced mode) if you change the selections
 
     :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the preview content is not as expected
     :return: None
     """
-    image_magick_input = explicit_wait_visibility(browser, IMAGEMAGICK)
-    gpp_input = explicit_wait_visibility(browser, GPP)
+    browser.refresh()
+    image_magick_input = explicit_wait_visibility(browser, locators.pass_checkbox('imagemagick'))
+    gpp_input = explicit_wait_visibility(browser, locators.pass_checkbox('g++'))
     # select the two options
     image_magick_input.click()
     gpp_input.click()
     # open advanced mode
-    advanced_button = explicit_wait_visibility(browser, ADVANCED_BUTTON)
+    advanced_button = explicit_wait_visibility(browser, locators.ADVANCED_BUTTON)
     advanced_button.click()
     # get the preview content
-    preview = explicit_wait_visibility(browser, PREVIEW_INPUT)
+    preview = explicit_wait_visibility(browser, locators.PREVIEW_INPUT)
     preview_content = preview.get_attribute('value')
     # check that g++ and imagemagick are mentioned in it as selected
     assert 'g++' in preview_content, 'g++ was not in the preview content unlike expected!'
@@ -139,3 +38,192 @@ def test_preview(browser):
     assert 'imagemagick' not in preview_content, 'imagemagick was in the preview content unlike expected!'
 
 
+def test_dockerfile_os_selection(browser):
+    """
+    | Tests the content of the dockerfile based on OS selections
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the dockerfile is not as expected
+    :return: None
+    """
+    browser.refresh()
+    # selecting CentOS
+    system_select = Select(explicit_wait_visibility(browser, locators.SYSTEM_DROPDOWN))
+    system_select.select_by_visible_text('CentOS')
+    # download the dockerfile
+    download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
+    download_button.click()
+    sleep(0.5)  # time to actually download the file
+    with open(DOCKERFILE_PATH, 'r') as f:
+        content = f.read()
+        assert 'FROM educloud:centOS' in content, 'The selected OS was not found in the Dockerfile!'
+    clean_download()
+    system_select.select_by_visible_text('Ubuntu')
+    download_button.click()
+    sleep(0.5)  # time to actually download the file
+    with open(DOCKERFILE_PATH, 'r') as f:
+        content = f.read()
+        assert 'FROM educloud:ubuntu' in content, 'The selected OS was not found in the Dockerfile!'
+        assert 'FROM educloud:centOS' not in content, 'An OS which was not selected was found in the Dockerfile!'
+    clean_download()
+
+
+def test_dockerfile_module_selection(browser):
+    """
+    | Tests the content of the dockerfile based on module selections
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the dockerfile is not as expected
+    :return: None
+    """
+    browser.refresh()
+    # define the expected of each module set
+    standard_expected = ('RUN pip3 install requests scrapy wxpython pillow sqlalchemy beautifulsoup '
+                         'twisted numpy scipy matplotlib pygame pyglet pyqt pygtk scapy pywin32 '
+                         'nltk nose sympy ipython')
+    data_science_expected = ('RUN pip3 install numpy thano keras pytorch scipy pandas pybrain '
+                             'scikit-learn matplotlib tensorflow seaborn bokeh plotly nltk '
+                             'gensim scrapy3 statsmodels kivy pyqt opencv')
+    machine_learning_expected = ('RUN pip3 install tensorflow scikit-learn numpy Keras pytorch '
+                                 'torchvision lightgbm eli5 scipy Theano pandas')
+    mathematics_expected = ('RUN pip3 install numpy pandas scipy matplotlib patsy sympy plotly '
+                            'statsmodels adipy matalg27 mlpstyler')
+    module_select = Select(explicit_wait_visibility(browser, locators.MODULE_SET_DROPDOWN))
+    # try with Data Science module set
+    module_select.select_by_visible_text('Data Science')
+    download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
+    download_button.click()
+    first_content = read_dockerfile_content()  # get the dockerfile content
+    assert data_science_expected in first_content, 'The Data Science module set was not found in the Dockerfile!'
+    assert standard_expected not in first_content
+    assert machine_learning_expected not in first_content
+    assert mathematics_expected not in first_content
+    clean_download()
+    # try the same with Standard module set
+    module_select.select_by_visible_text('Standard')
+    download_button.click()
+    second_content = read_dockerfile_content()
+    assert standard_expected in second_content, 'The Standard module set was not found in the Dockerfile!'
+    assert data_science_expected not in second_content
+    assert machine_learning_expected not in second_content
+    assert mathematics_expected not in second_content
+    clean_download()
+    # try the same with Mathematics module set
+    module_select.select_by_visible_text('Mathematics')
+    download_button.click()
+    third_content = read_dockerfile_content()
+    assert mathematics_expected in third_content, 'The Mathematics module set was not found in the Dockerfile!'
+    assert data_science_expected not in third_content
+    assert standard_expected not in third_content
+    assert machine_learning_expected not in third_content
+    clean_download()
+    # try the same with Machine Learning module set
+    module_select.select_by_visible_text('Machine Learning')
+    download_button.click()
+    fourth_content = read_dockerfile_content()
+    assert machine_learning_expected in fourth_content, ('The Machine Learning module set was not found '
+                                                         'in the Dockerfile!')
+    assert data_science_expected not in fourth_content
+    assert standard_expected not in fourth_content
+    assert mathematics_expected not in fourth_content
+    clean_download()
+
+
+def test_dockerfile_sudo_access(browser):
+    """
+    | Tests the content of the dockerfile based on the Sudo Access selection
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the dockerfile is not as expected
+    :return: None
+    """
+    browser.refresh()
+    sudo_input = explicit_wait_visibility(browser, locators.pass_checkbox('User has Sudo Access'))
+    download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
+    download_button.click()
+    first_content = read_dockerfile_content()
+    assert 'sudo usermod' not in first_content, 'Sudo could be found in the Dockerfile!'
+    clean_download()
+    sudo_input.click()  # tick the checkbox of Sudo Access on
+    download_button.click()
+    second_content = read_dockerfile_content()
+    assert 'sudo usermod' in second_content, 'Sudo could not be found in the Dockerfile!'
+    clean_download()
+
+
+def test_dockerfile_packages(browser):
+    """
+    | Tests the content of the dockerfile based on Debian/Ubuntu package selections
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the dockerfile is not as expected
+    :return: None
+    """
+    browser.refresh()
+    # find required elements
+    libbz_input = explicit_wait_visibility(browser, locators.pass_checkbox('libbz2'))
+    automake_input = explicit_wait_visibility(browser, locators.pass_checkbox('automake'))
+    download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
+    new_package_input = explicit_wait_visibility(browser, locators.NEW_PACKAGE_INPUT)
+    plus_button = explicit_wait_visibility(browser, locators.NEW_PACKAGE_PLUS_BUTTON)
+    # make selections
+    libbz_input.click()
+    automake_input.click()
+    download_button.click()
+    content = read_dockerfile_content()
+    assert 'libbz2' in content, 'Libbz2 was not found in the Dockerfile!'
+    assert 'automake' in content, 'Automake was not found in the Dockerfile!'
+    clean_download()
+    # undo selections
+    libbz_input.click()
+    automake_input.click()
+    download_button.click()
+    content = read_dockerfile_content()
+    assert 'libbz2' not in content, 'Libbz2 was found in the Dockerfile!'
+    assert 'automake' not in content, 'Automake was found in the Dockerfile!'
+    clean_download()
+    # create new input field
+    new_package_input.send_keys('abcdefg')
+    plus_button.click()
+    new_package_input.send_keys('donotreadthis')
+    plus_button.click()
+    download_button.click()
+    content = read_dockerfile_content()
+    assert 'abcdefg' in content, 'The new package abcdefg was not found in the Dockerfile!'
+    assert 'donotreadthis' in content, 'The new package donotreadthis was not found in the Dockerfile!'
+    clean_download()
+
+
+def test_dockerfile_port(browser):
+    """
+    | Tests the content of the dockerfile based on the exposed port
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the dockerfile is not as expected
+    :return: None
+    """
+    browser.refresh()
+    port_input = explicit_wait_visibility(browser, locators.PORT_INPUT)
+    download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
+    # change the port number to 8329
+    port_input.clear()
+    port_input.send_keys(8329)
+    download_button.click()
+    content = read_dockerfile_content()
+    assert 'EXPOSE 8329' in content, 'The set port was not found in the Dockerfile!'
+    assert 'EXPOSE 8080' not in content, 'The default port was found in the Dockerfile!'
+    clean_download()
+    # try with port 1234
+    port_input.clear()
+    port_input.send_keys(1234)
+    download_button.click()
+    content = read_dockerfile_content()
+    assert 'EXPOSE 1234' in content, 'The set port was not found in the Dockerfile!'
+    assert 'EXPOSE 8080' not in content, 'The default port was found in the Dockerfile!'
+    clean_download()
+    # check now with default port 8080
+    port_input.clear()
+    download_button.click()
+    content = read_dockerfile_content()
+    assert 'EXPOSE 8080' in content, 'The default port was not found in the Dockerfile!'
+    clean_download()
