@@ -8,7 +8,7 @@ let staticRecipe = [];
  * RegExp to find docker keywords in a string.
  * @type {RegExp}
  */
-const dockerKeywords = /(FROM|MAINTAINER|RUN|CMD|LABEL|EXPOSE|ENV|ADD|COPY|ENTRYPOINT|VOLUME|USER|WORKDIR|ARG|ONBUILD|STOPSIGNAL|HEALTHCHECK|SHELL)/g
+const dockerKeywords = /(FROM|MAINTAINER|RUN|CMD|LABEL|EXPOSE|ENV|ADD|COPY|ENTRYPOINT|VOLUME|USER|WORKDIR|ARG|ONBUILD|STOPSIGNAL|HEALTHCHECK|SHELL)/g;
 /**
  * Flag that shows if the advanced recipe field is visible
  * @type {Boolean}
@@ -41,7 +41,7 @@ function getOS() {
     } else if (dropdownValue === 'CentOS') {
         return 'FROM educloud:centOS\n';
     }
-};
+}
 
 /**
  * function that returns a couple of static functions.
@@ -52,7 +52,7 @@ function getStaticInstructions() {
     // PUSH YOUR STATIC INSTRUCTIONS HERE!!!!
     //*************************************
     return 'RUN sudo apt-get purge -y python.* && sudo apt-get update && sudo apt-get install -y --no-install-recommends\n';
-};
+}
 
 /**
  * function that returns the selected pip packagelist from the dropdownValue
@@ -60,27 +60,27 @@ function getStaticInstructions() {
  */
 function getPipPackages() {
     const strStart = 'RUN pip3 install ';
-    const package = document.getElementById('selectionPackage').value;
-    if (package === 'Standard') {
+    const packageValue = document.getElementById('selectionPackage').value;
+    if (packageValue === 'Standard') {
         // based on Top 20 List: https://pythontips.com/2013/07/30/20-python-libraries-you-cant-live-without/
         return(strStart + 'requests scrapy wxpython pillow sqlalchemy beautifulsoup '+
         'twisted numpy scipy matplotlib pygame pyglet pyqt pygtk scapy pywin32 ' +
         'nltk nose sympy ipython\n');
-    } else if (package === 'Machine Learning') {
+    } else if (packageValue === 'Machine Learning') {
         // based on Top 10 List: https://www.edureka.co/blog/python-libraries/
         return(strStart + 'tensorflow scikit-learn numpy Keras ' +
         'pytorch torchvision lightgbm eli5 scipy Theano pandas\n')
-    } else if (package === 'Data Science') {
+    } else if (packageValue === 'Data Science') {
         // based on Top 20 List: https://bigdata-madesimple.com/top-20-python-libraries-for-data-science/
         return(strStart + 'numpy thano keras pytorch scipy pandas pybrain ' +
         'scikit-learn matplotlib tensorflow seaborn bokeh plotly nltk ' +
         'gensim scrapy3 statsmodels kivy pyqt opencv\n');
-    } else if (package === 'Mathematics') {
+    } else if (packageValue === 'Mathematics') {
         // based on Top 11 List: https://www.quora.com/What-are-the-best-Python-mathematics-libraries
         return(strStart + 'numpy pandas scipy matplotlib patsy sympy plotly ' +
         'statsmodels adipy matalg27 mlpstyler\n');
     }
-};
+}
 
 /**
  * function that returns the debian/ubuntu packages from the checkboxes
@@ -90,10 +90,10 @@ function getDependencies() {
     let packageStr = '';
     dependencies.forEach(function (value, key, map) {
         if (value) packageStr = packageStr + key + ' ';
-    })
+    });
     if(packageStr === '') return '';
     return 'RUN sudo apt-get install ' + packageStr + '\n';
-};
+}
 
 /**
  * function that returns a string that can revoke the sudo access from the user
@@ -107,7 +107,7 @@ function getSudoAccess() {
         'sudo userdel -r user\n' +
         'USER userPython\n'
     } else return '';
-};
+}
 
 /**
  * function finds the selected Port from the input fields
@@ -119,7 +119,7 @@ function getPort() {
     } else {
         return 'EXPOSE ' + document.getElementById('port').value;
     }
-};
+}
 
 /**
  * function runs the getter functions for the dockerfile parts and the calls
@@ -138,9 +138,9 @@ function buildStaticInstructions() {
     if (inAdvanced) {
         recipe = compareRecipes();}
     else {
-        recipe = staticRecipe};
+        recipe = staticRecipe}
     updateRecipeField(recipe);
-};
+}
 
 /**
  * function that updates the value of the recipe field
@@ -150,7 +150,7 @@ function updateRecipeField(recipe) {
     let recipeStr = '';
     for (let i=0; i<recipe.length; i++) recipeStr += recipe[i];
     document.getElementById('recipe').value = recipeStr.replace(/\n$/, '').trim();
-};
+}
 
 /**
  * function that compares the computed static recipe and the cut recipe from the
@@ -164,8 +164,8 @@ function compareRecipes() {
     if (document.getElementById('recipe').value === '') {
         return staticRecipe;
     }
-    advancedRecipe = cutAdvancedRecipe();
-    let returnRecipe = []
+    let advancedRecipe = cutAdvancedRecipe();
+    let returnRecipe = [];
     // Compare staticRecipe and the recipe sliced from the recipe field. If they
     // are the same one will be used for the output. If the advanced contains
     // the static the advanced recipe will be appended to the output. If both
@@ -188,11 +188,11 @@ function compareRecipes() {
     }
     returnRecipe[returnRecipe.length-1] += ' \n\n';
     for(; itStc<staticRecipe.length; itStc++) {
-        returnRecipe.push(staticRecipe[itStc])};
+        returnRecipe.push(staticRecipe[itStc])}
     for(; itAdv<advancedRecipe.length; itAdv++) {
-        returnRecipe.push(advancedRecipe[itAdv])};
+        returnRecipe.push(advancedRecipe[itAdv])}
     return returnRecipe;
-};
+}
 
 /**
  * Function that takes the value of the advanced recipe field and splits it at
@@ -200,12 +200,12 @@ function compareRecipes() {
  * @return {Array[String]} Array of strings that contain the cut docker instructions
  */
 function cutAdvancedRecipe() {
-    advancedRecipe = [];
+    let advancedRecipe = [];
     let recipe = document.getElementById('recipe').value;
     // Split the recipe on every dockerfile keyword and append it to the output
     // recipe.substr(1).search(dockerKeywords) is a workaround so search() does
     // not use the beginning of the string (the current starting keyword) as a result
-    for (let pos = recipe.substr(1).search(dockerKeywords); pos != -1;){
+    for (let pos = recipe.substr(1).search(dockerKeywords); pos !== -1;){
         advancedRecipe.push(recipe.substr(0, pos+1));
         // To cut at the right position it needs to be +1 and +1 for the \n character
         recipe = recipe.substr(pos+1);
@@ -213,13 +213,13 @@ function cutAdvancedRecipe() {
     }
     advancedRecipe.push(recipe);
     return advancedRecipe;
-};
+}
 
 /**
  * Function resets the recipe field to the static recipe.
  */
 function resetRecipe() {
-    buildStr = [];
+    let buildStr = [];
     buildStr.push(getOS());
     buildStr.push(getStaticInstructions());
     buildStr.push(getPipPackages());
@@ -229,7 +229,7 @@ function resetRecipe() {
     staticRecipe = buildStr;
     updateRecipeField(staticRecipe);
     $('#resetModal').modal('hide');
-};
+}
 
 /**
  * function that toggles the AdvancedFlag that shows if the advanced recipe
@@ -237,7 +237,7 @@ function resetRecipe() {
  */
 function toggleAdvancedFlag () {
     inAdvanced = !inAdvanced;
-};
+}
 
 
 
@@ -260,7 +260,7 @@ window.onload = function () {
                     ` + key + `
                 </label>
             </div>\n`;
-    })
+    });
     buildStaticInstructions();
 };
 
@@ -283,7 +283,7 @@ function addDependency() {
     dependencies.set(value, true);
     document.getElementById('chkBoxInput').value = '';
     buildStaticInstructions();
-};
+}
 
 /**
  * Event Listener for onclick event of the "downloadButton" button element in the
@@ -300,7 +300,7 @@ function startDownload() {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-};
+}
 
 /**
  * Event Listener for the onchange event of the debian/ubuntu package checkboxes.
@@ -315,4 +315,4 @@ function updateDependencies() {
         }
     });
     buildStaticInstructions();
-};
+}
