@@ -234,6 +234,7 @@ def test_preview_reset(browser):
     :raises AssertionError: If the content of the preview is not as expected
     :return: None
     """
+    browser.refresh()
     advanced_button = explicit_wait_visibility(browser, locators.ADVANCED_BUTTON)
     advanced_button.click()  # open the advanced mode
     reset_button = explicit_wait_visibility(browser, locators.RESET_BUTTON)
@@ -248,3 +249,26 @@ def test_preview_reset(browser):
     explicit_wait_visibility(browser, locators.RESET_POPUP).click()
     preview_content = preview_input.get_attribute('value')  # get content of preview after reset
     assert 'ratatatata' not in preview_content, 'Ratatatata was found in the preview after reset unlike expected!'
+
+
+def test_advanced_mode_dockerfile(browser):
+    """
+    | Tests the content of the dockerfile based on the advanced mode manual changes
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the dockerfile is not as expected
+    :return: None
+    """
+    browser.refresh()
+    advanced_button = explicit_wait_visibility(browser, locators.ADVANCED_BUTTON)
+    download_button = explicit_wait_visibility(browser, locators.DOWNLOAD_BUTTON)
+    download_button.click()  # download dockerfile
+    content = read_dockerfile_content()
+    assert 'I can see you' not in content, 'Content of the Dockerfile was not as expected!'
+    clean_download()
+    advanced_button.click()  # open the advanced mode
+    preview_input = explicit_wait_visibility(browser, locators.PREVIEW_INPUT)
+    preview_input.send_keys('\nI can see you')  # change the preview content
+    download_button.click()
+    content = read_dockerfile_content()  # new content expected now
+    assert 'I can see you' in content, 'Content of the Dockerfile after advanced changes was not as expected!'
