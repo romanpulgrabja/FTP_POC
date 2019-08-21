@@ -224,3 +224,27 @@ def test_dockerfile_port(browser):
     content = read_dockerfile_content()
     assert 'EXPOSE 8080' in content, 'The default port was not found in the Dockerfile!'
     clean_download()
+
+
+def test_preview_reset(browser):
+    """
+    | Tests the Reset button functionality for the preview in the advanced mode
+
+    :param webdriver browser: The browser instance from the webdriver
+    :raises AssertionError: If the content of the preview is not as expected
+    :return: None
+    """
+    advanced_button = explicit_wait_visibility(browser, locators.ADVANCED_BUTTON)
+    advanced_button.click()  # open the advanced mode
+    reset_button = explicit_wait_visibility(browser, locators.RESET_BUTTON)
+    preview_input = explicit_wait_visibility(browser, locators.PREVIEW_INPUT)
+    preview_content = preview_input.get_attribute('value')  # get the content of the preview input field
+    assert 'ratatatata' not in preview_content, 'Ratatatata was found in the preview unlike expected!'
+    preview_input.send_keys('\nratatatata')  # send some keys to it in new line
+    preview_content = preview_input.get_attribute('value')  # get new value of preview
+    assert 'ratatatata' in preview_content, 'Ratatatata was not found unlike expected!'
+    # go to reset the preview input field with the reset button
+    reset_button.click()
+    explicit_wait_visibility(browser, locators.RESET_POPUP).click()
+    preview_content = preview_input.get_attribute('value')  # get content of preview after reset
+    assert 'ratatatata' not in preview_content, 'Ratatatata was found in the preview after reset unlike expected!'
